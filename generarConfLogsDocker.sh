@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ARCH="/etc/docker/daemon.json"
+
 # Contenido que deseas escribir en daemon.json
 CONFIG='{
   "log-driver": "json-file",
@@ -9,6 +11,11 @@ CONFIG='{
   }
 }'
 
-echo "$CONFIG" | sudo tee /etc/docker/daemon.json >/dev/null
-systemctl restart docker
-echo "Configuracion de logs de docker, lista"
+if [ -f "$ARCH" ]; then
+  # el archivo existe
+  echo "El archivo existe, me hago el vago"  
+else
+  echo "$CONFIG" | sudo tee "$ARCH" >/dev/null
+  systemctl restart docker
+  echo "Configuracion de logs de docker, lista"
+fi
